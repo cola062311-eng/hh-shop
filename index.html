@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>品牌嚴選 - 專屬團購優惠</title>
+  <title>H&H 品牌嚴選 - 專屬團購優惠</title>
   <style>
     :root {
       --primary-color: #0d6efd;
@@ -60,13 +60,14 @@
     }
     .tag {
       display: inline-block;
-      background: #f0f2f5;
-      color: #555;
+      background: #eef2f7;
+      color: #0d6efd;
       font-size: 0.75rem;
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 4px;
       margin-right: 4px;
       margin-bottom: 4px;
+      font-weight: 500;
     }
     .price-box {
       margin: 12px 0;
@@ -167,9 +168,9 @@
 <body>
 
 <div class="container">
-  <!-- 團購抬頭 -->
+  <!-- 頁頭與團購主標籤 -->
   <div class="header">
-    <h1 id="shopTitle">嚴選好物團購專區</h1>
+    <h1 id="shopTitle">H&H 品牌嚴選團購</h1>
     <span class="host-badge" id="hostName">載入中...</span>
   </div>
 
@@ -178,7 +179,7 @@
     <p style="text-align:center;">載入商品資料中...</p>
   </div>
 
-  <!-- 訂購人資訊 -->
+  <!-- 收件人資訊 -->
   <div class="section-card">
     <h3>📋 收件人資訊</h3>
     <div class="form-group">
@@ -195,11 +196,11 @@
     </div>
     <div class="form-group">
       <label>收件地址 *</label>
-      <input type="text" id="custAddress" class="form-control" placeholder="請填寫完整地址" required>
+      <input type="text" id="custAddress" class="form-control" placeholder="請填寫完整收件地址" required>
     </div>
   </div>
 
-  <!-- 付款方式 -->
+  <!-- 付款管道選擇 -->
   <div class="section-card">
     <h3>💳 付款方式</h3>
     <div class="payment-options">
@@ -207,14 +208,14 @@
       <div class="payment-option" id="optBank" onclick="selectPayment('公司銀行轉帳')">公司銀行轉帳</div>
     </div>
 
-    <!-- 轉帳帳號資訊 -->
+    <!-- 銀行轉帳帳號資訊 -->
     <div class="bank-info" id="bankArea" style="display: none;">
-      <p style="margin:0 0 6px 0;"><strong>匯款資訊：</strong></p>
+      <p style="margin:0 0 6px 0;"><strong>公司匯款帳號：</strong></p>
       <p style="margin:0 0 4px 0;">銀行：台灣銀行 (004)</p>
       <p style="margin:0 0 8px 0;">帳號：123-456-789012 (戶名：南良國際股份有限公司)</p>
       <div class="form-group" style="margin-bottom: 0;">
         <label>您的匯款帳號後五碼 *</label>
-        <input type="text" id="bankLast5" class="form-control" placeholder="請填寫後五碼以利對帳">
+        <input type="text" id="bankLast5" class="form-control" placeholder="請填寫轉帳帳號後五碼以利對帳">
       </div>
     </div>
   </div>
@@ -224,13 +225,13 @@
 </div>
 
 <script>
-  // ⚠️ 請替換為您在【步驟 1】部署獲得的 Apps Script 網址
-  const GAS_API_URL = "https://script.google.com/macros/s/AKfycby-FQ5XHF3nfsTL-L47oFTpytmFydVp0DtnInf8DNTc/dev"; 
+  // ⚠️ 請替換為您在 Apps Script 部署獲得的網頁應用程式網址
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxLmaRbdC9jM9t3CerENr61l8yVHchvme6hXTdJZ7kMFOpr1JuOjMarmjJkoo4g4a_klQ/exec"; 
 
   let currentHostId = "ALL";
   let selectedPayment = "藍新線上刷卡";
   let productsData = [];
-  let cart = {}; // { P001: 數量 }
+  let cart = {};
 
   // 1. 初始化頁面，讀取網址參數 ?host=xxx
   window.onload = function() {
@@ -239,7 +240,7 @@
     loadProducts();
   };
 
-  // 2. 向 GAS API 抓取產品與團購主資訊
+  // 2. 抓取產品與團購主資訊
   function loadProducts() {
     fetch(`${GAS_API_URL}?host=${currentHostId}`)
       .then(res => res.json())
@@ -251,7 +252,7 @@
         }
       })
       .catch(err => {
-        document.getElementById('productList').innerHTML = "<p style='color:red;'>無法載入商品，請重新整理。</p>";
+        document.getElementById('productList').innerHTML = "<p style='text-align:center; color:red;'>無法載入商品，請確認 GAS API 網址設定。</p>";
       });
   }
 
@@ -266,7 +267,7 @@
     }
 
     products.forEach(p => {
-      cart[p["商品編號"]] = 0; // 預設數量 0
+      cart[p["商品編號"]] = 0;
 
       // 處理產品功能標籤
       let featuresHtml = "";
@@ -295,7 +296,7 @@
     });
   }
 
-  // 4. 更新購買數量與計算總額
+  // 4. 更新數量與計算總金額
   function updateQty(productId, delta) {
     let current = cart[productId] || 0;
     current = Math.max(0, current + delta);
@@ -321,7 +322,7 @@
     document.getElementById('bankArea').style.display = (type === '公司銀行轉帳') ? 'block' : 'none';
   }
 
-  // 6. 送出訂單
+  // 6. 送出訂單與藍新自動 POST 轉址
   function submitOrder() {
     const custName = document.getElementById('custName').value.trim();
     const custPhone = document.getElementById('custPhone').value.trim();
@@ -329,14 +330,13 @@
     const custAddress = document.getElementById('custAddress').value.trim();
     const bankLast5 = document.getElementById('bankLast5').value.trim();
 
-    // 檢查訂單品項
     let items = [];
     Object.keys(cart).forEach(id => {
       if (cart[id] > 0) items.push({ id: id, qty: cart[id] });
     });
 
     if (items.length === 0) { alert("請至少選擇一項商品！"); return; }
-    if (!custName || !custPhone || !custEmail || !custAddress) { alert("請完整填寫收件人資料！"); return; }
+    if (!custName || !custPhone || !custEmail || !custAddress) { alert("請完整填寫收件人資訊！"); return; }
     if (selectedPayment === "公司銀行轉帳" && !bankLast5) { alert("請填寫您的轉帳帳號後五碼！"); return; }
 
     const btn = document.getElementById('submitBtn');
@@ -360,20 +360,46 @@
     .then(data => {
       if (data.status === "success") {
         if (selectedPayment === "藍新線上刷卡") {
-          alert(`訂單建立成功 (單號：${data.orderId})，準備前往刷卡...`);
-          // 步驟 3 會在這裡補上藍新 Form 表單自動 POST 轉址
+          alert(`訂單建立成功 (單號：${data.orderId})，即將轉址至藍新刷卡頁面...`);
+          
+          const payData = data.newebPayData;
+          
+          // 自動建立 hidden form 並 POST 轉址至藍新金流
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = payData.PayGateUrl;
+
+          const params = {
+            MerchantID: payData.MerchantID,
+            TradeInfo: payData.TradeInfo,
+            TradeSha: payData.TradeSha,
+            Version: payData.Version
+          };
+
+          for (let key in params) {
+            const hiddenField = document.createElement("input");
+            hiddenField.type = "hidden";
+            hiddenField.name = key;
+            hiddenField.value = params[key];
+            form.appendChild(hiddenField);
+          }
+
+          document.body.appendChild(form);
+          form.submit();
         } else {
-          alert(`訂單已成功送出！\n單號：${data.orderId}\n請轉帳至公司帳號，我們將於對帳後儘快發貨。`);
+          alert(`訂單已成功送出！\n單號：${data.orderId}\n請轉帳至公司帳號，我們將於對帳後儘快為您出貨。`);
           location.reload();
         }
       } else {
         alert("下單失敗：" + data.message);
         btn.disabled = false;
+        btn.innerText = "重新下單";
       }
     })
     .catch(err => {
       alert("連線失敗，請稍後再試。");
       btn.disabled = false;
+      btn.innerText = "重新下單";
     });
   }
 </script>
