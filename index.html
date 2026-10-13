@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>品牌嚴選 - 專屬團購優惠</title>
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: #333;
+      margin: 0;
+      padding: 16px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 1.4rem;
+      margin: 0 0 8px 0;
+      color: #222;
+    }
+    .host-badge {
+      display: inline-block;
+      background: #e7f1ff;
+      color: var(--primary-color);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .product-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .product-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .feature-tags {
+      margin-bottom: 8px;
+    }
+    .tag {
+      display: inline-block;
+      background: #f0f2f5;
+      color: #555;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+    .price-box {
+      margin: 12px 0;
+    }
+    .price {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #dc3545;
+    }
+    .original-price {
+      font-size: 0.85rem;
+      color: #888;
+      text-decoration: line-through;
+      margin-left: 8px;
+    }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .section-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 0.95rem;
+    }
+    .payment-options {
+      display: flex;
+      gap: 12px;
+    }
+    .payment-option {
+      flex: 1;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .payment-option.active {
+      border-color: var(--primary-color);
+      background: #f0f7ff;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    .bank-info {
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: #856404;
+    }
+    .submit-btn {
+      width: 100%;
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .submit-btn:disabled {
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 團購抬頭 -->
+  <div class="header">
+    <h1 id="shopTitle">嚴選好物團購專區</h1>
+    <span class="host-badge" id="hostName">載入中...</span>
+  </div>
+
+  <!-- 商品清單 -->
+  <div id="productList">
+    <p style="text-align:center;">載入商品資料中...</p>
+  </div>
+
+  <!-- 訂購人資訊 -->
+  <div class="section-card">
+    <h3>📋 收件人資訊</h3>
+    <div class="form-group">
+      <label>姓名 *</label>
+      <input type="text" id="custName" class="form-control" placeholder="請填寫真實姓名" required>
+    </div>
+    <div class="form-group">
+      <label>聯絡電話 *</label>
+      <input type="tel" id="custPhone" class="form-control" placeholder="例：0912345678" required>
+    </div>
+    <div class="form-group">
+      <label>電子信箱 *</label>
+      <input type="email" id="custEmail" class="form-control" placeholder="用於寄送訂單確認信" required>
+    </div>
+    <div class="form-group">
+      <label>收件地址 *</label>
+      <input type="text" id="custAddress" class="form-control" placeholder="請填寫完整地址" required>
+    </div>
+  </div>
+
+  <!-- 付款方式 -->
+  <div class="section-card">
+    <h3>💳 付款方式</h3>
+    <div class="payment-options">
+      <div class="payment-option active" id="optCredit" onclick="selectPayment('藍新線上刷卡')">藍新線上刷卡</div>
+      <div class="payment-option" id="optBank" onclick="selectPayment('公司銀行轉帳')">公司銀行轉帳</div>
+    </div>
+
+    <!-- 轉帳帳號資訊 -->
+    <div class="bank-info" id="bankArea" style="display: none;">
+      <p style="margin:0 0 6px 0;"><strong>匯款資訊：</strong></p>
+      <p style="margin:0 0 4px 0;">銀行：台灣銀行 (004)</p>
+      <p style="margin:0 0 8px 0;">帳號：123-456-789012 (戶名：南良國際股份有限公司)</p>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>您的匯款帳號後五碼 *</label>
+        <input type="text" id="bankLast5" class="form-control" placeholder="請填寫後五碼以利對帳">
+      </div>
+    </div>
+  </div>
+
+  <!-- 結帳按鈕 -->
+  <button class="submit-btn" id="submitBtn" onclick="submitOrder()">立即下單結帳 ($ <span id="totalDisplay">0</span>)</button>
+</div>
+
+<script>
+  // ⚠️ 請替換為您在【步驟 1】部署獲得的 Apps Script 網址
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycby-FQ5XHF3nfsTL-L47oFTpytmFydVp0DtnInf8DNTc/dev"; 
+
+  let currentHostId = "ALL";
+  let selectedPayment = "藍新線上刷卡";
+  let productsData = [];
+  let cart = {}; // { P001: 數量 }
+
+  // 1. 初始化頁面，讀取網址參數 ?host=xxx
+  window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    currentHostId = urlParams.get('host') || 'ALL';
+    loadProducts();
+  };
+
+  // 2. 向 GAS API 抓取產品與團購主資訊
+  function loadProducts() {
+    fetch(`${GAS_API_URL}?host=${currentHostId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          document.getElementById('hostName').innerText = `推薦團購主：${data.host["團購主姓名"] || "官方總店"}`;
+          productsData = data.products;
+          renderProducts(data.products);
+        }
+      })
+      .catch(err => {
+        document.getElementById('productList').innerHTML = "<p style='color:red;'>無法載入商品，請重新整理。</p>";
+      });
+  }
+
+  // 3. 渲染商品清單與產品功能標籤
+  function renderProducts(products) {
+    const container = document.getElementById('productList');
+    container.innerHTML = "";
+
+    if (products.length === 0) {
+      container.innerHTML = "<p style='text-align:center;'>目前尚無可購買之商品。</p>";
+      return;
+    }
+
+    products.forEach(p => {
+      cart[p["商品編號"]] = 0; // 預設數量 0
+
+      // 處理產品功能標籤
+      let featuresHtml = "";
+      if (p["產品功能"]) {
+        const tags = p["產品功能"].split("、");
+        featuresHtml = tags.map(t => `<span class="tag">✓ ${t.trim()}</span>`).join("");
+      }
+
+      const html = `
+        <div class="product-card">
+          <div class="product-title">${p["商品名稱"]}</div>
+          <div class="feature-tags">${featuresHtml}</div>
+          <p style="font-size:0.85rem; color:#666; margin:4px 0;">${p["商品簡介"] || ""}</p>
+          <div class="price-box">
+            <span class="price">$${p["團購價格"]}</span>
+            ${p["定價/原價"] ? `<span class="original-price">$${p["定價/原價"]}</span>` : ""}
+          </div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="updateQty('${p["商品編號"]}', -1)">-</button>
+            <span id="qty_${p["商品編號"]}">0</span>
+            <button class="qty-btn" onclick="updateQty('${p["商品編號"]}', 1)">+</button>
+          </div>
+        </div>
+      `;
+      container.innerHTML += html;
+    });
+  }
+
+  // 4. 更新購買數量與計算總額
+  function updateQty(productId, delta) {
+    let current = cart[productId] || 0;
+    current = Math.max(0, current + delta);
+    cart[productId] = current;
+    document.getElementById(`qty_${productId}`).innerText = current;
+    calculateTotal();
+  }
+
+  function calculateTotal() {
+    let total = 0;
+    productsData.forEach(p => {
+      const qty = cart[p["商品編號"]] || 0;
+      total += qty * Number(p["團購價格"]);
+    });
+    document.getElementById('totalDisplay').innerText = total;
+  }
+
+  // 5. 切換付款方式
+  function selectPayment(type) {
+    selectedPayment = type;
+    document.getElementById('optCredit').classList.toggle('active', type === '藍新線上刷卡');
+    document.getElementById('optBank').classList.toggle('active', type === '公司銀行轉帳');
+    document.getElementById('bankArea').style.display = (type === '公司銀行轉帳') ? 'block' : 'none';
+  }
+
+  // 6. 送出訂單
+  function submitOrder() {
+    const custName = document.getElementById('custName').value.trim();
+    const custPhone = document.getElementById('custPhone').value.trim();
+    const custEmail = document.getElementById('custEmail').value.trim();
+    const custAddress = document.getElementById('custAddress').value.trim();
+    const bankLast5 = document.getElementById('bankLast5').value.trim();
+
+    // 檢查訂單品項
+    let items = [];
+    Object.keys(cart).forEach(id => {
+      if (cart[id] > 0) items.push({ id: id, qty: cart[id] });
+    });
+
+    if (items.length === 0) { alert("請至少選擇一項商品！"); return; }
+    if (!custName || !custPhone || !custEmail || !custAddress) { alert("請完整填寫收件人資料！"); return; }
+    if (selectedPayment === "公司銀行轉帳" && !bankLast5) { alert("請填寫您的轉帳帳號後五碼！"); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerText = "訂單處理中...";
+
+    const payload = {
+      action: "createOrder",
+      hostId: currentHostId,
+      paymentMethod: selectedPayment,
+      bankLast5: bankLast5,
+      customer: { name: custName, phone: custPhone, email: custEmail, address: custAddress },
+      items: items
+    };
+
+    fetch(GAS_API_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        if (selectedPayment === "藍新線上刷卡") {
+          alert(`訂單建立成功 (單號：${data.orderId})，準備前往刷卡...`);
+          // 步驟 3 會在這裡補上藍新 Form 表單自動 POST 轉址
+        } else {
+          alert(`訂單已成功送出！\n單號：${data.orderId}\n請轉帳至公司帳號，我們將於對帳後儘快發貨。`);
+          location.reload();
+        }
+      } else {
+        alert("下單失敗：" + data.message);
+        btn.disabled = false;
+      }
+    })
+    .catch(err => {
+      alert("連線失敗，請稍後再試。");
+      btn.disabled = false;
+    });
+  }
+</script>
+
+</body>
+</html>
