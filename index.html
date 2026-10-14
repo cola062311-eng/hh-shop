@@ -57,11 +57,31 @@
       position: relative;
     }
 
+    /* 專屬 H&H 綠色 LOGO 樣式設定 */
+    .brand-logo-img {
+      height: 52px;          /* LOGO 高度完美完美比例 */
+      width: auto;
+      margin-bottom: 10px;
+      /* 加上微白光襯托，讓綠色 LOGO 在深色背景更鮮明突出 */
+      filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.4));
+      transition: transform 0.3s ease;
+    }
+
+    .brand-logo-img:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 540px) {
+      .brand-logo-img {
+        height: 42px;        /* 手機版微調高度 */
+      }
+    }
+
     .brand-logo-text {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       letter-spacing: 3px;
-      margin: 0 0 6px 0;
+      margin: 0 0 4px 0;
       background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -504,7 +524,9 @@
 <body>
 
 <div class="brand-hero">
-  <div class="brand-logo-text">H&H SELECT</div>
+  <!-- 品牌官方 H&H LOGO -->
+  <img src="HHLOGO.png" alt="H&H Logo" class="brand-logo-img">
+  <div class="brand-logo-text">SELECT</div>
   <div class="brand-subtitle">Health & Hope 品牌嚴選館</div>
   <div class="host-badge-wrapper">
     <span class="host-badge-dot"></span>
