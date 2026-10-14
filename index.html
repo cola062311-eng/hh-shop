@@ -39,7 +39,7 @@
       line-height: 1.5;
     }
 
-    /* 寬幅響應式容器：最大寬度放寬至 1024px */
+    /* 寬幅響應式容器：最大寬度 1024px */
     .container {
       max-width: 1024px;
       margin: 0 auto;
@@ -300,7 +300,6 @@
       gap: 8px;
     }
 
-    /* 表單併排排版（電腦與平板兩欄） */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -424,6 +423,73 @@
       box-shadow: none;
       cursor: not-allowed;
     }
+
+    /* ================= 自訂品牌彈窗 (Modal) ================= */
+    .custom-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .custom-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .custom-modal {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 380px;
+      width: 85%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      transform: translateY(12px);
+      transition: transform 0.25s ease;
+    }
+
+    .custom-modal-overlay.active .custom-modal {
+      transform: translateY(0);
+    }
+
+    .custom-modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--brand-dark);
+      margin-bottom: 10px;
+    }
+
+    .custom-modal-msg {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      margin-bottom: 22px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .custom-modal-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+    }
   </style>
 </head>
 <body>
@@ -445,14 +511,14 @@
     <span>🔥</span> 專屬優惠限時選購
   </div>
 
-  <!-- 商品網格清單（電腦版 3 欄 / 平板 2 欄 / 手機 1 欄） -->
+  <!-- 商品網格清單 -->
   <div id="productList">
     <div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-sub);">
       載入精選商品中...
     </div>
   </div>
 
-  <!-- 收件人資料（電腦版雙欄併排） -->
+  <!-- 收件人資料 -->
   <div class="card-block">
     <h3>📦 收件人資料</h3>
     <div class="form-grid">
@@ -505,6 +571,15 @@
 
 </div>
 
+<!-- 自訂品牌無網址標題彈窗 -->
+<div class="custom-modal-overlay" id="customModal">
+  <div class="custom-modal">
+    <div class="custom-modal-title" id="modalTitle">系統提示</div>
+    <div class="custom-modal-msg" id="modalMsg">提示內容</div>
+    <button class="custom-modal-btn" onclick="closeModal()">確定</button>
+  </div>
+</div>
+
 <script>
   // ⚠️ 請輸入您的 Google Apps Script API 部署網址
   const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxLmaRbdC9jM9t3CerENr61l8yVHchvme6hXTdJZ7kMFOpr1JuOjMarmjJkoo4g4a_klQ/exec"; 
@@ -513,6 +588,24 @@
   let selectedPayment = "藍新線上刷卡";
   let productsData = [];
   let cart = {};
+
+  // 自訂美化彈窗控制邏輯
+  function showAlert(msg, title = "系統提示", callback = null) {
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMsg').innerText = msg;
+    const modal = document.getElementById('customModal');
+    modal.classList.add('active');
+    window.modalCallback = callback;
+  }
+
+  function closeModal() {
+    document.getElementById('customModal').classList.remove('active');
+    if (window.modalCallback) {
+      const cb = window.modalCallback;
+      window.modalCallback = null;
+      cb();
+    }
+  }
 
   window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -531,7 +624,7 @@
         }
       })
       .catch(err => {
-        document.getElementById('productList').innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:#ef4444; padding:20px;">無法連線 API，請確認 GAS API 網址設定。</div>`;
+        document.getElementById('productList').innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:#ef4444; padding:20px;">無法連線 API，請檢查網路或網址設定。</div>`;
       });
   }
 
@@ -625,9 +718,9 @@
       if (cart[id] > 0) items.push({ id: id, qty: cart[id] });
     });
 
-    if (items.length === 0) { alert("請至少選擇一項商品！"); return; }
-    if (!custName || !custPhone || !custEmail || !custAddress) { alert("請完整填寫收件人資訊！"); return; }
-    if (selectedPayment === "公司銀行轉帳" && !bankLast5) { alert("請填寫轉帳帳號末五碼！"); return; }
+    if (items.length === 0) { showAlert("請至少選擇一項商品！"); return; }
+    if (!custName || !custPhone || !custEmail || !custAddress) { showAlert("請完整填寫收件人資訊！"); return; }
+    if (selectedPayment === "公司銀行轉帳" && !bankLast5) { showAlert("請填寫轉帳帳號末五碼！"); return; }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
@@ -650,38 +743,40 @@
     .then(data => {
       if (data.status === "success") {
         if (selectedPayment === "藍新線上刷卡") {
-          alert(`訂單成立成功 (單號：${data.orderId})，即將前往藍新刷卡頁面...`);
-          const payData = data.newebPayData;
-          const form = document.createElement("form");
-          form.method = "POST";
-          form.action = payData.PayGateUrl;
-          const params = {
-            MerchantID: payData.MerchantID,
-            TradeInfo: payData.TradeInfo,
-            TradeSha: payData.TradeSha,
-            Version: payData.Version
-          };
-          for (let key in params) {
-            const hiddenField = document.createElement("input");
-            hiddenField.type = "hidden";
-            hiddenField.name = key;
-            hiddenField.value = params[key];
-            form.appendChild(hiddenField);
-          }
-          document.body.appendChild(form);
-          form.submit();
+          showAlert(`訂單成立成功 (單號：${data.orderId})，點擊確定後將前往藍新刷卡頁面...`, "付款引導", function() {
+            const payData = data.newebPayData;
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = payData.PayGateUrl;
+            const params = {
+              MerchantID: payData.MerchantID,
+              TradeInfo: payData.TradeInfo,
+              TradeSha: payData.TradeSha,
+              Version: payData.Version
+            };
+            for (let key in params) {
+              const hiddenField = document.createElement("input");
+              hiddenField.type = "hidden";
+              hiddenField.name = key;
+              hiddenField.value = params[key];
+              form.appendChild(hiddenField);
+            }
+            document.body.appendChild(form);
+            form.submit();
+          });
         } else {
-          alert(`訂單已成功送出！\n單號：${data.orderId}\n請轉帳至指定帳號，對帳後將儘快出貨。`);
-          location.reload();
+          showAlert(`訂單已成功送出！\n單號：${data.orderId}\n請轉帳至指定帳號，對帳後將儘快出貨。`, "訂單成立", function() {
+            location.reload();
+          });
         }
       } else {
-        alert("下單失敗：" + data.message);
+        showAlert("下單失敗：" + data.message, "錯誤提示");
         btn.disabled = false;
         btn.innerText = "重新下單";
       }
     })
     .catch(err => {
-      alert("連線失敗，請稍後再試。");
+      showAlert("連線失敗，請稍後再試。", "連線錯誤");
       btn.disabled = false;
       btn.innerText = "重新下單";
     });
