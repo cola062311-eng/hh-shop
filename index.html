@@ -3,274 +3,424 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>H&H 品牌嚴選 - 專屬團購優惠</title>
+  <title>H&H 品牌嚴選 - 專屬團購旗艦館</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --primary-color: #0d6efd;
-      --bg-color: #f4f6f9;
+      --brand-dark: #0f172a;       /* 高級深藍黑 (主色) */
+      --brand-primary: #1e3a8a;    /* 經典 H&H 藍 */
+      --brand-gold: #d97706;       /* 質感金 (點綴色) */
+      --brand-red: #ef4444;        /* 促銷紅 */
+      --bg-light: #f8fafc;         /* 純淨背景灰 */
       --card-bg: #ffffff;
-      --text-main: #1f2937;
-      --accent-red: #e63946;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --border-color: #e2e8f0;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: var(--bg-color);
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, sans-serif;
+      background-color: var(--bg-light);
       color: var(--text-main);
       margin: 0;
-      padding: 16px;
+      padding: 0 0 50px 0;
+      line-height: 1.5;
     }
 
+    /* 寬幅響應式容器：最大寬度放寬至 1024px */
     .container {
-      max-width: 680px;
+      max-width: 1024px;
       margin: 0 auto;
+      padding: 0 20px;
     }
 
-    /* 頁首 Header 樣式 */
-    .header {
+    /* ================= VI 品牌 Header 旗艦區 ================= */
+    .brand-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 36px 20px 30px 20px;
       text-align: center;
-      padding: 24px 16px;
-      background: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      border: 1px solid #eef2f6;
-      margin-bottom: 20px;
+      border-radius: 0 0 24px 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+      position: relative;
+      overflow: hidden;
     }
 
-    .header h1 {
-      font-size: 1.5rem;
-      margin: 0 0 10px 0;
-      color: var(--text-main);
-      font-weight: 800;
-      letter-spacing: -0.5px;
+    .brand-hero::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+      pointer-events: none;
     }
 
-    .host-badge {
-      display: inline-block;
-      background: #e7f1ff;
-      color: var(--primary-color);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.9rem;
+    .brand-logo-text {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      margin: 0 0 6px 0;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      letter-spacing: 3px;
+      text-transform: uppercase;
       font-weight: 700;
+      margin-bottom: 18px;
     }
 
-    /* 商品列表：電腦與平板設為一排兩個（雙欄） */
+    .host-badge-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .host-badge-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    /* ================= 商品列表：電腦/平板/手機網格佈局 ================= */
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin: 0 0 18px 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--brand-dark);
+    }
+
+    /* 電腦版預設：一排 3 個 */
     #productList {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
     }
 
-    /* 手機小螢幕切回單欄，確保良好閱讀體驗 */
-    @media (max-width: 480px) {
+    /* 平板版 (小於 900px)：切換為一排 2 個 */
+    @media (max-width: 900px) {
       #productList {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
       }
     }
 
-    /* 單一商品卡片樣式 */
+    /* 手機版 (小於 540px)：切換為一排 1 個 */
+    @media (max-width: 540px) {
+      #productList {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+
     .product-card {
       background: var(--card-bg);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       padding: 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      border: 1px solid #eef2f6;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
     }
 
     .product-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
+    }
+
+    .img-container {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background-color: #f1f5f9;
+      margin-bottom: 12px;
+      position: relative;
     }
 
     .product-img {
       width: 100%;
-      height: 160px;
+      height: 100%;
       object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      background-color: #f8f9fa;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-img {
+      transform: scale(1.05);
     }
 
     .product-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      line-height: 1.4;
+      font-size: 0.98rem;
+      font-weight: 800;
       color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .feature-tags {
-      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 14px;
     }
 
     .tag {
-      display: inline-block;
-      background: #eef2f7;
-      color: var(--primary-color);
+      background: #eff6ff;
+      color: #1d4ed8;
       font-size: 0.72rem;
-      padding: 3px 6px;
-      border-radius: 4px;
-      margin-right: 4px;
-      margin-bottom: 4px;
-      font-weight: 600;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid #dbeafe;
     }
 
-    .price-box {
-      margin-top: auto;
-      margin-bottom: 10px;
+    .price-area {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 12px;
     }
 
-    .price {
-      font-size: 1.25rem;
+    .price-symbol {
+      font-size: 0.9rem;
       font-weight: 800;
-      color: var(--accent-red);
+      color: var(--brand-red);
+    }
+
+    .price-num {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--brand-red);
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .original-price {
       font-size: 0.8rem;
-      color: #9ca3af;
+      color: var(--text-sub);
       text-decoration: line-through;
-      margin-left: 6px;
     }
 
+    /* 數量控制按鈕 */
     .qty-control {
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
       padding: 4px 8px;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
     }
 
     .qty-btn {
-      width: 28px;
-      height: 28px;
-      border: 1px solid #cbd5e1;
+      width: 30px;
+      height: 30px;
+      border: none;
       background: #ffffff;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: bold;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--brand-dark);
       cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #334155;
     }
 
     .qty-btn:active {
-      background: #e2e8f0;
+      transform: scale(0.92);
+      background: #f1f5f9;
     }
 
     .qty-num {
-      font-size: 0.95rem;
-      font-weight: 700;
-    }
-
-    /* 表單與結帳卡片 */
-    .section-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      border: 1px solid #eef2f6;
-    }
-
-    .section-card h3 {
-      margin-top: 0;
-      margin-bottom: 16px;
-      font-size: 1.1rem;
+      font-weight: 800;
+      font-size: 1rem;
       color: var(--text-main);
     }
 
+    /* ================= 結帳與資訊卡片（支援欄位雙欄併排） ================= */
+    .card-block {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+
+    .card-block h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin: 0 0 18px 0;
+      color: var(--brand-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 表單併排排版（電腦與平板兩欄） */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
     }
 
     .form-group label {
       display: block;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
+      color: var(--text-sub);
       margin-bottom: 6px;
-      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .form-control {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      box-sizing: border-box;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
       font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
+      background: #ffffff;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .form-control:focus {
-      border-color: var(--primary-color);
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
     }
 
-    .payment-options {
-      display: flex;
-      gap: 12px;
+    /* 付款選擇器 */
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
 
-    .payment-option {
-      flex: 1;
-      border: 2px solid #e5e7eb;
-      border-radius: 10px;
-      padding: 14px 8px;
+    @media (max-width: 480px) {
+      .payment-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    .payment-card {
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 12px;
       text-align: center;
       cursor: pointer;
-      font-size: 0.92rem;
-      font-weight: 600;
-      transition: all 0.2s;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-sub);
+      transition: all 0.2s ease;
+      background: #ffffff;
     }
 
-    .payment-option.active {
-      border-color: var(--primary-color);
+    .payment-card.active {
+      border-color: var(--brand-primary);
       background: #eff6ff;
-      color: var(--primary-color);
+      color: var(--brand-primary);
     }
 
-    .bank-info {
+    .bank-box {
       background: #fffbe2;
-      border: 1px solid #fde68a;
-      padding: 14px;
-      border-radius: 8px;
-      margin-top: 14px;
-      font-size: 0.88rem;
-      color: #92400e;
-      line-height: 1.5;
+      border: 1px solid #fef08a;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 0.9rem;
+      color: #854d0e;
+      line-height: 1.6;
     }
 
+    /* 主結帳按鈕 */
     .submit-btn {
       width: 100%;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #ffffff;
       border: none;
-      padding: 16px;
-      font-size: 1.1rem;
+      padding: 20px;
+      border-radius: 16px;
+      font-size: 1.2rem;
       font-weight: 800;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      letter-spacing: 0.5px;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.3);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .submit-btn:hover {
+      box-shadow: 0 14px 26px -4px rgba(15, 23, 42, 0.4);
+      transform: translateY(-2px);
     }
 
     .submit-btn:active {
-      transform: scale(0.99);
+      transform: scale(0.98);
     }
 
     .submit-btn:disabled {
-      background: #9ca3af;
+      background: #cbd5e1;
       box-shadow: none;
       cursor: not-allowed;
     }
@@ -278,64 +428,85 @@
 </head>
 <body>
 
+<!-- 頂端 VI 旗艦 Header -->
+<div class="brand-hero">
+  <div class="brand-logo-text">H&H SELECT</div>
+  <div class="brand-subtitle">Health & Hope 品牌嚴選館</div>
+  <div class="host-badge-wrapper">
+    <span class="host-badge-dot"></span>
+    <span id="hostName">推薦專員：載入中...</span>
+  </div>
+</div>
+
 <div class="container">
-  <!-- 頂端 Header -->
-  <div class="header">
-    <h1 id="shopTitle">H&H 品牌嚴選團購</h1>
-    <span class="host-badge" id="hostName">載入中...</span>
+  
+  <!-- 商品區塊標題 -->
+  <div class="section-title">
+    <span>🔥</span> 專屬優惠限時選購
   </div>
 
-  <!-- 商品列表（雙欄展示區） -->
+  <!-- 商品網格清單（電腦版 3 欄 / 平板 2 欄 / 手機 1 欄） -->
   <div id="productList">
-    <p style="grid-column: 1 / -1; text-align:center; color:#6b7280; padding: 20px 0;">載入商品資料中...</p>
-  </div>
-
-  <!-- 收件人資訊表單 -->
-  <div class="section-card">
-    <h3>📋 收件人資訊</h3>
-    <div class="form-group">
-      <label>姓名 *</label>
-      <input type="text" id="custName" class="form-control" placeholder="請填寫真實姓名" required>
-    </div>
-    <div class="form-group">
-      <label>聯絡電話 *</label>
-      <input type="tel" id="custPhone" class="form-control" placeholder="例：0912345678" required>
-    </div>
-    <div class="form-group">
-      <label>電子信箱 *</label>
-      <input type="email" id="custEmail" class="form-control" placeholder="用於寄送訂單確認信" required>
-    </div>
-    <div class="form-group">
-      <label>收件地址 *</label>
-      <input type="text" id="custAddress" class="form-control" placeholder="請填寫完整收件地址" required>
+    <div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-sub);">
+      載入精選商品中...
     </div>
   </div>
 
-  <!-- 付款方式選擇 -->
-  <div class="section-card">
-    <h3>💳 付款方式</h3>
-    <div class="payment-options">
-      <div class="payment-option active" id="optCredit" onclick="selectPayment('藍新線上刷卡')">藍新線上刷卡</div>
-      <div class="payment-option" id="optBank" onclick="selectPayment('公司銀行轉帳')">公司銀行轉帳</div>
-    </div>
-
-    <div class="bank-info" id="bankArea" style="display: none;">
-      <p style="margin:0 0 6px 0;"><strong>公司匯款帳號資訊：</strong></p>
-      <p style="margin:0 0 4px 0;">銀行：第一銀行台南分行 (0076010)</p>
-      <p style="margin:0 0 10px 0;">帳號：60110065896 (戶名：南良國際股份有限公司台南分公司)</p>
-      <div class="form-group" style="margin-bottom: 0;">
-        <label style="color:#92400e;">您的轉帳帳號後五碼 *</label>
-        <input type="text" id="bankLast5" class="form-control" placeholder="請填寫轉帳帳號後五碼以利對帳" maxlength="5">
+  <!-- 收件人資料（電腦版雙欄併排） -->
+  <div class="card-block">
+    <h3>📦 收件人資料</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>訂購人姓名 *</label>
+        <input type="text" id="custName" class="form-control" placeholder="請填寫真實姓名" required>
+      </div>
+      <div class="form-group">
+        <label>行動電話 *</label>
+        <input type="tel" id="custPhone" class="form-control" placeholder="例如：0912345678" required>
+      </div>
+      <div class="form-group full-width">
+        <label>電子信箱 *</label>
+        <input type="email" id="custEmail" class="form-control" placeholder="接收訂單成立通知信" required>
+      </div>
+      <div class="form-group full-width">
+        <label>配送地址 *</label>
+        <input type="text" id="custAddress" class="form-control" placeholder="請填寫完整配送地址" required>
       </div>
     </div>
   </div>
 
-  <!-- 結帳按鈕 -->
-  <button class="submit-btn" id="submitBtn" onclick="submitOrder()">立即下單結帳 ($ <span id="totalDisplay">0</span>)</button>
+  <!-- 付款管道 -->
+  <div class="card-block">
+    <h3>💳 付款方式</h3>
+    <div class="payment-grid">
+      <div class="payment-card active" id="optCredit" onclick="selectPayment('藍新線上刷卡')">
+        💳 藍新線上刷卡
+      </div>
+      <div class="payment-card" id="optBank" onclick="selectPayment('公司銀行轉帳')">
+        🏦 銀行轉帳付款
+      </div>
+    </div>
+
+    <div class="bank-box" id="bankArea" style="display: none;">
+      <p style="margin: 0 0 4px 0; font-weight:800;">匯款資訊：</p>
+      <p style="margin: 0 0 2px 0;">銀行：第一銀行台南分行 (0076010)</p>
+      <p style="margin: 0 0 10px 0;">帳號：60110065896（南良國際股份有限公司台南分公司）</p>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label style="color:#854d0e;">您的轉帳帳號末五碼 *</label>
+        <input type="text" id="bankLast5" class="form-control" placeholder="請輸入轉帳帳號後五碼" maxlength="5">
+      </div>
+    </div>
+  </div>
+
+  <!-- 提交按鈕 -->
+  <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
+    確認下單結帳 ($ <span id="totalDisplay">0</span>)
+  </button>
+
 </div>
 
 <script>
-  // ⚠️ 請填入您的 Apps Script Web App 部署網址
+  // ⚠️ 請輸入您的 Google Apps Script API 部署網址
   const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxLmaRbdC9jM9t3CerENr61l8yVHchvme6hXTdJZ7kMFOpr1JuOjMarmjJkoo4g4a_klQ/exec"; 
 
   let currentHostId = "ALL";
@@ -354,13 +525,13 @@
       .then(res => res.json())
       .then(data => {
         if (data.status === "success") {
-          document.getElementById('hostName').innerText = `推薦團購主：${data.host["團購主姓名"] || "官方總店"}`;
+          document.getElementById('hostName').innerText = `推薦專員：${data.host["團購主姓名"] || "官方總店"}`;
           productsData = data.products;
           renderProducts(data.products);
         }
       })
       .catch(err => {
-        document.getElementById('productList').innerHTML = "<p style='grid-column: 1 / -1; text-align:center; color:#ef4444;'>無法載入商品，請確認 GAS API 網址設定。</p>";
+        document.getElementById('productList').innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:#ef4444; padding:20px;">無法連線 API，請確認 GAS API 網址設定。</div>`;
       });
   }
 
@@ -369,21 +540,20 @@
     container.innerHTML = "";
 
     if (products.length === 0) {
-      container.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; color:#6b7280;'>目前尚無可購買之商品。</p>";
+      container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--text-sub); padding:20px;">目前尚無開團商品。</div>`;
       return;
     }
 
     products.forEach(p => {
       cart[p["商品編號"]] = 0;
 
-      // 拆解產品功能為標籤
       let featuresHtml = "";
       if (p["產品功能"]) {
         const tags = p["產品功能"].split("、");
-        featuresHtml = tags.map(t => `<span class="tag">✓ ${t.trim()}</span>`).join("");
+        featuresHtml = tags.map(t => `<span class="tag">${t.trim()}</span>`).join("");
       }
 
-      // 自動解析與轉換 Google Drive 圖片連結
+      // 自動解析 Drive 圖片
       let imgUrl = p["商品圖片"] || "";
       if (imgUrl.includes("drive.google.com")) {
         let match = imgUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || imgUrl.match(/id=([a-zA-Z0-9_-]+)/);
@@ -397,13 +567,14 @@
       const html = `
         <div class="product-card">
           <div>
-            ${imgHtml}
+            <div class="img-container">${imgHtml}</div>
             <div class="product-title">${p["商品名稱"]}</div>
             <div class="feature-tags">${featuresHtml}</div>
           </div>
           <div>
-            <div class="price-box">
-              <span class="price">$${p["團購價格"]}</span>
+            <div class="price-area">
+              <span class="price-symbol">$</span>
+              <span class="price-num">${p["團購價格"]}</span>
               ${p["原價"] ? `<span class="original-price">$${p["原價"]}</span>` : ""}
             </div>
             <div class="qty-control">
@@ -456,11 +627,11 @@
 
     if (items.length === 0) { alert("請至少選擇一項商品！"); return; }
     if (!custName || !custPhone || !custEmail || !custAddress) { alert("請完整填寫收件人資訊！"); return; }
-    if (selectedPayment === "公司銀行轉帳" && !bankLast5) { alert("請填寫您的轉帳帳號後五碼！"); return; }
+    if (selectedPayment === "公司銀行轉帳" && !bankLast5) { alert("請填寫轉帳帳號末五碼！"); return; }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
-    btn.innerText = "訂單處理中...";
+    btn.innerText = "訂單傳送中...";
 
     const payload = {
       action: "createOrder",
@@ -479,20 +650,17 @@
     .then(data => {
       if (data.status === "success") {
         if (selectedPayment === "藍新線上刷卡") {
-          alert(`訂單建立成功 (單號：${data.orderId})，即將轉址至藍新刷卡頁面...`);
-          
+          alert(`訂單成立成功 (單號：${data.orderId})，即將前往藍新刷卡頁面...`);
           const payData = data.newebPayData;
           const form = document.createElement("form");
           form.method = "POST";
           form.action = payData.PayGateUrl;
-
           const params = {
             MerchantID: payData.MerchantID,
             TradeInfo: payData.TradeInfo,
             TradeSha: payData.TradeSha,
             Version: payData.Version
           };
-
           for (let key in params) {
             const hiddenField = document.createElement("input");
             hiddenField.type = "hidden";
@@ -500,11 +668,10 @@
             hiddenField.value = params[key];
             form.appendChild(hiddenField);
           }
-
           document.body.appendChild(form);
           form.submit();
         } else {
-          alert(`訂單已成功送出！\n單號：${data.orderId}\n請轉帳至公司帳號，我們將於對帳後儘快為您出貨。`);
+          alert(`訂單已成功送出！\n單號：${data.orderId}\n請轉帳至指定帳號，對帳後將儘快出貨。`);
           location.reload();
         }
       } else {
