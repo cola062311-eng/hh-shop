@@ -7,179 +7,290 @@
   <style>
     :root {
       --primary-color: #0d6efd;
-      --bg-color: #f8f9fa;
+      --bg-color: #f4f6f9;
       --card-bg: #ffffff;
+      --text-main: #1f2937;
+      --accent-red: #e63946;
     }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: var(--bg-color);
-      color: #333;
+      color: var(--text-main);
       margin: 0;
       padding: 16px;
     }
+
     .container {
-      max-width: 600px;
+      max-width: 680px;
       margin: 0 auto;
     }
+
+    /* 頁首 Header 樣式 */
     .header {
       text-align: center;
-      padding: 20px 0;
+      padding: 24px 16px;
       background: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      border: 1px solid #eef2f6;
       margin-bottom: 20px;
     }
+
     .header h1 {
-      font-size: 1.4rem;
-      margin: 0 0 8px 0;
-      color: #222;
+      font-size: 1.5rem;
+      margin: 0 0 10px 0;
+      color: var(--text-main);
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
+
     .host-badge {
       display: inline-block;
       background: #e7f1ff;
       color: var(--primary-color);
-      padding: 4px 12px;
+      padding: 6px 16px;
       border-radius: 20px;
       font-size: 0.9rem;
-      font-weight: bold;
+      font-weight: 700;
     }
+
+    /* 商品列表：電腦與平板設為一排兩個（雙欄） */
+    #productList {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    /* 手機小螢幕切回單欄，確保良好閱讀體驗 */
+    @media (max-width: 480px) {
+      #productList {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 單一商品卡片樣式 */
     .product-card {
       background: var(--card-bg);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      border: 1px solid #eef2f6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background-color: #f8f9fa;
+    }
+
     .product-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 1.4;
+      color: var(--text-main);
     }
+
     .feature-tags {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
+
     .tag {
       display: inline-block;
       background: #eef2f7;
-      color: #0d6efd;
-      font-size: 0.75rem;
-      padding: 3px 8px;
+      color: var(--primary-color);
+      font-size: 0.72rem;
+      padding: 3px 6px;
       border-radius: 4px;
       margin-right: 4px;
       margin-bottom: 4px;
-      font-weight: 500;
+      font-weight: 600;
     }
+
     .price-box {
-      margin: 12px 0;
+      margin-top: auto;
+      margin-bottom: 10px;
     }
+
     .price {
       font-size: 1.25rem;
-      font-weight: bold;
-      color: #dc3545;
+      font-weight: 800;
+      color: var(--accent-red);
     }
+
     .original-price {
-      font-size: 0.85rem;
-      color: #888;
+      font-size: 0.8rem;
+      color: #9ca3af;
       text-decoration: line-through;
-      margin-left: 8px;
+      margin-left: 6px;
     }
+
     .qty-control {
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      background: #f8fafc;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
     }
+
     .qty-btn {
-      width: 32px;
-      height: 32px;
-      border: 1px solid #ccc;
-      background: #fff;
+      width: 28px;
+      height: 28px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
       border-radius: 6px;
       font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #334155;
     }
+
+    .qty-btn:active {
+      background: #e2e8f0;
+    }
+
+    .qty-num {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    /* 表單與結帳卡片 */
     .section-card {
       background: var(--card-bg);
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 20px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      border: 1px solid #eef2f6;
     }
+
+    .section-card h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.1rem;
+      color: var(--text-main);
+    }
+
     .form-group {
       margin-bottom: 14px;
     }
+
     .form-group label {
       display: block;
-      font-size: 0.9rem;
-      font-weight: bold;
+      font-size: 0.88rem;
+      font-weight: 700;
       margin-bottom: 6px;
+      color: #374151;
     }
+
     .form-control {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
       box-sizing: border-box;
       font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
     }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+    }
+
     .payment-options {
       display: flex;
       gap: 12px;
     }
+
     .payment-option {
       flex: 1;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px 8px;
       text-align: center;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: all 0.2s;
     }
+
     .payment-option.active {
       border-color: var(--primary-color);
-      background: #f0f7ff;
-      font-weight: bold;
+      background: #eff6ff;
       color: var(--primary-color);
     }
+
     .bank-info {
-      background: #fff3cd;
-      border: 1px solid #ffeeba;
-      padding: 12px;
-      border-radius: 6px;
-      margin-top: 12px;
-      font-size: 0.85rem;
-      color: #856404;
+      background: #fffbe2;
+      border: 1px solid #fde68a;
+      padding: 14px;
+      border-radius: 8px;
+      margin-top: 14px;
+      font-size: 0.88rem;
+      color: #92400e;
+      line-height: 1.5;
     }
+
     .submit-btn {
       width: 100%;
-      background: #28a745;
+      background: linear-gradient(135deg, #10b981, #059669);
       color: white;
       border: none;
-      padding: 14px;
+      padding: 16px;
       font-size: 1.1rem;
-      font-weight: bold;
-      border-radius: 8px;
+      font-weight: 800;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
       cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
     }
+
+    .submit-btn:active {
+      transform: scale(0.99);
+    }
+
     .submit-btn:disabled {
-      background: #ccc;
+      background: #9ca3af;
+      box-shadow: none;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- 頁頭與團購主標籤 -->
+  <!-- 頂端 Header -->
   <div class="header">
     <h1 id="shopTitle">H&H 品牌嚴選團購</h1>
     <span class="host-badge" id="hostName">載入中...</span>
   </div>
 
-  <!-- 商品清單 -->
+  <!-- 商品列表（雙欄展示區） -->
   <div id="productList">
-    <p style="text-align:center;">載入商品資料中...</p>
+    <p style="grid-column: 1 / -1; text-align:center; color:#6b7280; padding: 20px 0;">載入商品資料中...</p>
   </div>
 
-  <!-- 收件人資訊 -->
+  <!-- 收件人資訊表單 -->
   <div class="section-card">
     <h3>📋 收件人資訊</h3>
     <div class="form-group">
@@ -200,7 +311,7 @@
     </div>
   </div>
 
-  <!-- 付款管道選擇 -->
+  <!-- 付款方式選擇 -->
   <div class="section-card">
     <h3>💳 付款方式</h3>
     <div class="payment-options">
@@ -208,14 +319,13 @@
       <div class="payment-option" id="optBank" onclick="selectPayment('公司銀行轉帳')">公司銀行轉帳</div>
     </div>
 
-    <!-- 銀行轉帳帳號資訊 -->
     <div class="bank-info" id="bankArea" style="display: none;">
-      <p style="margin:0 0 6px 0;"><strong>公司匯款帳號：</strong></p>
-      <p style="margin:0 0 4px 0;">銀行：台灣銀行 (004)</p>
-      <p style="margin:0 0 8px 0;">帳號：123-456-789012 (戶名：南良國際股份有限公司)</p>
+      <p style="margin:0 0 6px 0;"><strong>公司匯款帳號資訊：</strong></p>
+      <p style="margin:0 0 4px 0;">銀行：第一銀行台南分行 (0076010)</p>
+      <p style="margin:0 0 10px 0;">帳號：60110065896 (戶名：南良國際股份有限公司台南分公司)</p>
       <div class="form-group" style="margin-bottom: 0;">
-        <label>您的匯款帳號後五碼 *</label>
-        <input type="text" id="bankLast5" class="form-control" placeholder="請填寫轉帳帳號後五碼以利對帳">
+        <label style="color:#92400e;">您的轉帳帳號後五碼 *</label>
+        <input type="text" id="bankLast5" class="form-control" placeholder="請填寫轉帳帳號後五碼以利對帳" maxlength="5">
       </div>
     </div>
   </div>
@@ -225,7 +335,7 @@
 </div>
 
 <script>
-  // ⚠️ 請替換為您在 Apps Script 部署獲得的網頁應用程式網址
+  // ⚠️ 請填入您的 Apps Script Web App 部署網址
   const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxLmaRbdC9jM9t3CerENr61l8yVHchvme6hXTdJZ7kMFOpr1JuOjMarmjJkoo4g4a_klQ/exec"; 
 
   let currentHostId = "ALL";
@@ -233,14 +343,12 @@
   let productsData = [];
   let cart = {};
 
-  // 1. 初始化頁面，讀取網址參數 ?host=xxx
   window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
     currentHostId = urlParams.get('host') || 'ALL';
     loadProducts();
   };
 
-  // 2. 抓取產品與團購主資訊
   function loadProducts() {
     fetch(`${GAS_API_URL}?host=${currentHostId}`)
       .then(res => res.json())
@@ -252,43 +360,57 @@
         }
       })
       .catch(err => {
-        document.getElementById('productList').innerHTML = "<p style='text-align:center; color:red;'>無法載入商品，請確認 GAS API 網址設定。</p>";
+        document.getElementById('productList').innerHTML = "<p style='grid-column: 1 / -1; text-align:center; color:#ef4444;'>無法載入商品，請確認 GAS API 網址設定。</p>";
       });
   }
 
-  // 3. 渲染商品清單與產品功能標籤
   function renderProducts(products) {
     const container = document.getElementById('productList');
     container.innerHTML = "";
 
     if (products.length === 0) {
-      container.innerHTML = "<p style='text-align:center;'>目前尚無可購買之商品。</p>";
+      container.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; color:#6b7280;'>目前尚無可購買之商品。</p>";
       return;
     }
 
     products.forEach(p => {
       cart[p["商品編號"]] = 0;
 
-      // 處理產品功能標籤
+      // 拆解產品功能為標籤
       let featuresHtml = "";
       if (p["產品功能"]) {
         const tags = p["產品功能"].split("、");
         featuresHtml = tags.map(t => `<span class="tag">✓ ${t.trim()}</span>`).join("");
       }
 
+      // 自動解析與轉換 Google Drive 圖片連結
+      let imgUrl = p["商品圖片"] || "";
+      if (imgUrl.includes("drive.google.com")) {
+        let match = imgUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || imgUrl.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          imgUrl = `https://lh3.googleusercontent.com/d/${match[1]}`;
+        }
+      }
+
+      let imgHtml = imgUrl ? `<img src="${imgUrl}" class="product-img" alt="${p["商品名稱"]}">` : "";
+
       const html = `
         <div class="product-card">
-          <div class="product-title">${p["商品名稱"]}</div>
-          <div class="feature-tags">${featuresHtml}</div>
-          <p style="font-size:0.85rem; color:#666; margin:4px 0;">${p["商品簡介"] || ""}</p>
-          <div class="price-box">
-            <span class="price">$${p["團購價格"]}</span>
-            ${p["定價/原價"] ? `<span class="original-price">$${p["定價/原價"]}</span>` : ""}
+          <div>
+            ${imgHtml}
+            <div class="product-title">${p["商品名稱"]}</div>
+            <div class="feature-tags">${featuresHtml}</div>
           </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="updateQty('${p["商品編號"]}', -1)">-</button>
-            <span id="qty_${p["商品編號"]}">0</span>
-            <button class="qty-btn" onclick="updateQty('${p["商品編號"]}', 1)">+</button>
+          <div>
+            <div class="price-box">
+              <span class="price">$${p["團購價格"]}</span>
+              ${p["原價"] ? `<span class="original-price">$${p["原價"]}</span>` : ""}
+            </div>
+            <div class="qty-control">
+              <button class="qty-btn" onclick="updateQty('${p["商品編號"]}', -1)">-</button>
+              <span class="qty-num" id="qty_${p["商品編號"]}">0</span>
+              <button class="qty-btn" onclick="updateQty('${p["商品編號"]}', 1)">+</button>
+            </div>
           </div>
         </div>
       `;
@@ -296,7 +418,6 @@
     });
   }
 
-  // 4. 更新數量與計算總金額
   function updateQty(productId, delta) {
     let current = cart[productId] || 0;
     current = Math.max(0, current + delta);
@@ -314,7 +435,6 @@
     document.getElementById('totalDisplay').innerText = total;
   }
 
-  // 5. 切換付款方式
   function selectPayment(type) {
     selectedPayment = type;
     document.getElementById('optCredit').classList.toggle('active', type === '藍新線上刷卡');
@@ -322,7 +442,6 @@
     document.getElementById('bankArea').style.display = (type === '公司銀行轉帳') ? 'block' : 'none';
   }
 
-  // 6. 送出訂單與藍新自動 POST 轉址
   function submitOrder() {
     const custName = document.getElementById('custName').value.trim();
     const custPhone = document.getElementById('custPhone').value.trim();
@@ -363,8 +482,6 @@
           alert(`訂單建立成功 (單號：${data.orderId})，即將轉址至藍新刷卡頁面...`);
           
           const payData = data.newebPayData;
-          
-          // 自動建立 hidden form 並 POST 轉址至藍新金流
           const form = document.createElement("form");
           form.method = "POST";
           form.action = payData.PayGateUrl;
