@@ -50,13 +50,13 @@
       box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
     }
 
-    .brand-logo-text {
-      font-size: 1.8rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .brand-company-title {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin: 0 0 4px 0;
+      color: #ffffff;
     }
 
     .brand-subtitle {
@@ -197,7 +197,7 @@
 <body>
 
 <div class="brand-hero">
-  <div class="brand-logo-text">H&H SELECT</div>
+  <div class="brand-company-title">南良國際</div>
   <div class="brand-subtitle">訂單進度與狀態查詢</div>
 </div>
 
@@ -221,7 +221,7 @@
 
 <script>
   // ⚠️ 請填寫您的 Google Apps Script Web App API 部署網址 (需以 /exec 結尾)
-  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxLmaRbdC9jM9t3CerENr61l8yVHchvme6hXTdJZ7kMFOpr1JuOjMarmjJkoo4g4a_klQ/exec"; 
+  const GAS_API_URL = "YOUR_GAS_API_URL"; 
 
   function performLookup() {
     const query = document.getElementById('searchInput').value.trim();
