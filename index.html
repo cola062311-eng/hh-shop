@@ -57,34 +57,32 @@
       position: relative;
     }
 
-    /* 專屬 H&H 綠色 LOGO 樣式設定 */
+    /* 原圖乾淨呈現 */
     .brand-logo-img {
-      height: 52px;          /* LOGO 高度完美完美比例 */
+      height: 52px;
       width: auto;
-      margin-bottom: 10px;
-      /* 加上微白光襯托，讓綠色 LOGO 在深色背景更鮮明突出 */
-      filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.4));
+      margin-bottom: 8px;
       transition: transform 0.3s ease;
     }
 
     .brand-logo-img:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
 
     @media (max-width: 540px) {
       .brand-logo-img {
-        height: 42px;        /* 手機版微調高度 */
+        height: 42px;
       }
     }
 
-    .brand-logo-text {
-      font-size: 1.8rem;
-      font-weight: 900;
-      letter-spacing: 3px;
+    /* 中黑體 南良國際 */
+    .brand-company-title {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 4px;
       margin: 0 0 4px 0;
-      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #ffffff;
     }
 
     .brand-subtitle {
@@ -105,7 +103,7 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 8px 20px;
       border-radius: 30px;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #f8fafc;
     }
@@ -116,6 +114,15 @@
       background-color: #10b981;
       border-radius: 50%;
       box-shadow: 0 0 8px #10b981;
+    }
+
+    /* 活動日期標籤 */
+    .event-period-text {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
 
     .section-title {
@@ -526,17 +533,19 @@
 <div class="brand-hero">
   <!-- 品牌官方 H&H LOGO -->
   <img src="HHLOGO.png" alt="H&H Logo" class="brand-logo-img">
-  <div class="brand-logo-text">SELECT</div>
-  <div class="brand-subtitle">Health & Hope 品牌嚴選館</div>
+  <div class="brand-company-title">南良國際</div>
+  <div class="brand-subtitle">品牌嚴選館</div>
   <div class="host-badge-wrapper">
     <span class="host-badge-dot"></span>
-    <span id="hostName">推薦專員：載入中...</span>
+    <span id="hostName">載入中...</span>
   </div>
+  <!-- 📅 動態活動日期顯示區塊 -->
+  <div id="eventPeriod" class="event-period-text" style="display: none;"></div>
 </div>
 
 <div class="container">
   <div class="section-title">
-    <span>🔥</span> 群聯專屬優惠限時選購
+    <span>🔥</span> 專屬優惠限時選購
   </div>
 
   <div id="productList">
@@ -555,10 +564,6 @@
       <div class="form-group">
         <label>行動電話 *</label>
         <input type="tel" id="custPhone" class="form-control" placeholder="例如：0912345678" required>
-      </div>
-      <div class="form-group full-width">
-        <label>電子信箱 *</label>
-        <input type="email" id="custEmail" class="form-control" placeholder="接收訂單成立通知信" required>
       </div>
       <div class="form-group full-width">
         <label>配送地址 *</label>
@@ -598,6 +603,7 @@
     <div class="footer-links">
       <a href="order-lookup.html" class="footer-link-item">🔍 查詢訂單進度</a>
       <span class="footer-divider">|</span>
+      <!-- ⚠️ 請將下方的 @your_line_id 替換為貴司實際的 LINE 官方帳號 ID -->
       <a href="https://line.me/R/ti/p/@792mygta" target="_blank" rel="noopener noreferrer" class="footer-link-item" style="color: #06c755;">💬 聯絡線上客服</a>
     </div>
     <div style="font-size: 0.8rem; color: #94a3b8;">
@@ -616,6 +622,7 @@
 </div>
 
 <!-- 右下角浮動 LINE 客服按鈕 -->
+<!-- ⚠️ 請將下方的 @your_line_id 替換為貴司實際的 LINE 官方帳號 ID -->
 <a href="https://line.me/R/ti/p/@792mygta" target="_blank" rel="noopener noreferrer" class="floating-service-btn">
   💬 聯絡客服
 </a>
@@ -630,7 +637,7 @@
 </div>
 
 <script>
-  // ⚠️ 請填寫您的 GAS Web App 部署 API 網址
+  // ⚠️ 請填寫您的 Google Apps Script Web App 部署 API 網址 (需以 /exec 結尾)
   const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxLmaRbdC9jM9t3CerENr61l8yVHchvme6hXTdJZ7kMFOpr1JuOjMarmjJkoo4g4a_klQ/exec"; 
 
   let currentHostId = "ALL";
@@ -669,7 +676,18 @@
       .then(res => res.json())
       .then(data => {
         if (data.status === "success") {
-          document.getElementById('hostName').innerText = `推薦專員：${data.host["團購主姓名"] || "官方總店"}`;
+          const hostName = data.host["團購主姓名"] || "官方總店";
+          document.getElementById('hostName').innerText = hostName;
+          
+          // 📅 自動渲染活動日期
+          const periodEl = document.getElementById('eventPeriod');
+          if (data.host["活動日期"]) {
+            periodEl.innerText = `活動期間：${data.host["活動日期"]}`;
+            periodEl.style.display = 'block';
+          } else {
+            periodEl.style.display = 'none';
+          }
+
           productsData = data.products;
           renderProducts(data.products);
         }
@@ -785,7 +803,6 @@
   function submitOrder() {
     const custName = document.getElementById('custName').value.trim();
     const custPhone = document.getElementById('custPhone').value.trim();
-    const custEmail = document.getElementById('custEmail').value.trim();
     const custAddress = document.getElementById('custAddress').value.trim();
     const bankLast5 = document.getElementById('bankLast5').value.trim();
 
@@ -795,7 +812,7 @@
     });
 
     if (items.length === 0) { showAlert("請至少選擇一項商品！"); return; }
-    if (!custName || !custPhone || !custEmail || !custAddress) { showAlert("請完整填寫收件人資訊！"); return; }
+    if (!custName || !custPhone || !custAddress) { showAlert("請完整填寫收件人資訊！"); return; }
     if (selectedPayment === "公司銀行轉帳" && !bankLast5) { showAlert("請填寫轉帳帳號末五碼！"); return; }
 
     const btn = document.getElementById('submitBtn');
@@ -807,7 +824,7 @@
       hostId: currentHostId,
       paymentMethod: selectedPayment,
       bankLast5: bankLast5,
-      customer: { name: custName, phone: custPhone, email: custEmail, address: custAddress },
+      customer: { name: custName, phone: custPhone, address: custAddress },
       items: items
     };
 
@@ -841,7 +858,7 @@
             form.submit();
           });
         } else {
-          showAlert(`訂單已成功送出！\n單號：${data.orderId}\n如需修改或取消訂單，請憑單號聯繫客服或至查詢訂單進度取消。`, "訂單成立", function() {
+          showAlert(`訂單已成功送出！\n單號：${data.orderId}\n如需修改或取消訂單，請憑單號聯繫客服。`, "訂單成立", function() {
             location.reload();
           });
         }
