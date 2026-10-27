@@ -39,7 +39,6 @@
       padding: 0 16px;
     }
 
-    /* 頂端品牌 Header */
     .brand-hero {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e3a8a 100%);
       color: #ffffff;
@@ -66,7 +65,6 @@
       margin-top: 4px;
     }
 
-    /* 查詢搜尋盒 */
     .search-card {
       background: var(--card-bg);
       border-radius: var(--radius-lg);
@@ -112,7 +110,6 @@
       cursor: pointer;
     }
 
-    /* 訂單卡片 */
     .order-card {
       background: var(--card-bg);
       border-radius: var(--radius-lg);
@@ -152,7 +149,6 @@
       font-size: 0.92rem;
       color: var(--text-sub);
       line-height: 1.6;
-      margin-bottom: 16px;
     }
 
     .order-items {
@@ -165,23 +161,6 @@
       white-space: pre-line;
     }
 
-    .cancel-btn {
-      width: 100%;
-      background: #ffffff;
-      color: #ef4444;
-      border: 1.5px solid #ef4444;
-      padding: 10px;
-      border-radius: var(--radius-md);
-      font-size: 0.9rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .cancel-btn:hover {
-      background: #fef2f2;
-    }
-
     .back-home {
       text-align: center;
       margin-top: 24px;
@@ -191,6 +170,17 @@
       color: var(--brand-primary);
       text-decoration: none;
       font-weight: 700;
+    }
+
+    .contact-info-box {
+      text-align: center;
+      margin-top: 18px;
+      padding: 12px;
+      background: #eff6ff;
+      border-radius: 12px;
+      color: var(--brand-primary);
+      font-weight: 700;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -202,7 +192,6 @@
 </div>
 
 <div class="container">
-  <!-- 搜尋盒 -->
   <div class="search-card">
     <div class="search-title">🔍 查詢您的訂單</div>
     <div class="search-box">
@@ -211,8 +200,11 @@
     </div>
   </div>
 
-  <!-- 查詢結果區塊 -->
   <div id="resultsList"></div>
+
+  <div class="contact-info-box">
+    📞 客服免付費專線：<a href="tel:0800660677" style="color:var(--brand-primary); text-decoration:underline;">0800-660-677</a>
+  </div>
 
   <div class="back-home">
     <a href="index.html">← 返回團購旗艦館頁面</a>
@@ -221,7 +213,7 @@
 
 <script>
   // ⚠️ 請填寫您的 Google Apps Script Web App API 部署網址 (需以 /exec 結尾)
-  const GAS_API_URL = "YOUR_GAS_API_URL"; 
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxLmaRbdC9jM9t3CerENr61l8yVHchvme6hXTdJZ7kMFOpr1JuOjMarmjJkoo4g4a_klQ/exec"; 
 
   function performLookup() {
     const query = document.getElementById('searchInput').value.trim();
@@ -274,40 +266,9 @@
             <div class="order-items"><strong>購買明細：</strong>\n${order.items}</div>
             <div><strong>訂單總金額：</strong><span style="color:#ef4444; font-weight:800; font-size:1.1rem;">$ ${order.totalAmount}</span></div>
           </div>
-          ${order.shippingStatus !== "已取消" ? `
-            <button class="cancel-btn" onclick="requestCancel('${order.orderId}', '${order.custPhone}')">❌ 線上申請取消訂單</button>
-          ` : ''}
         </div>
       `;
       container.innerHTML += html;
-    });
-  }
-
-  // 線上自動發送取消訂單至 Apps Script
-  function requestCancel(orderId, custPhone) {
-    if (!confirm(`確定要取消訂單 ${orderId} 嗎？\n點擊確定後系統將自動將 Google 試算表資料改為「已取消」。`)) {
-      return;
-    }
-
-    fetch(GAS_API_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "cancelOrder",
-        orderId: orderId,
-        phone: custPhone || ""
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "success") {
-        alert("訂單已成功取消！");
-        performLookup(); // 自動重新整理查詢結果
-      } else {
-        alert("取消失敗：" + data.message);
-      }
-    })
-    .catch(err => {
-      alert("連線失敗，請稍後再試。");
     });
   }
 </script>
