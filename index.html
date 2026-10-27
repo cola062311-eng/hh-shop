@@ -57,7 +57,6 @@
       position: relative;
     }
 
-    /* 原圖乾淨呈現 */
     .brand-logo-img {
       height: 52px;
       width: auto;
@@ -75,7 +74,6 @@
       }
     }
 
-    /* 中黑體 南良國際 */
     .brand-company-title {
       font-family: 'Noto Sans TC', sans-serif;
       font-size: 1.6rem;
@@ -116,7 +114,6 @@
       box-shadow: 0 0 8px #10b981;
     }
 
-    /* 活動日期標籤 */
     .event-period-text {
       margin-top: 10px;
       font-size: 0.85rem;
@@ -193,7 +190,6 @@
       opacity: 0.95;
     }
 
-    /* 折扣省錢標籤 */
     .save-badge {
       position: absolute;
       top: 8px;
@@ -237,7 +233,6 @@
       border: 1px solid #dbeafe;
     }
 
-    /* 價格區域 */
     .price-area {
       display: flex;
       align-items: baseline;
@@ -274,7 +269,6 @@
       margin-left: auto;
     }
 
-    /* 數量控制 */
     .qty-control {
       display: flex;
       align-items: center;
@@ -307,7 +301,6 @@
       color: var(--text-main);
     }
 
-    /* 表單區塊 */
     .card-block {
       background: var(--card-bg);
       border-radius: var(--radius-lg);
@@ -413,7 +406,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
       margin-bottom: 12px;
     }
 
@@ -436,7 +430,6 @@
       color: var(--border-color);
     }
 
-    /* 底部浮動快速結帳條 */
     .sticky-bar {
       position: fixed;
       bottom: 0;
@@ -505,7 +498,6 @@
       box-shadow: 0 6px 18px rgba(6, 199, 85, 0.5);
     }
 
-    /* 品牌彈窗 */
     .custom-modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -539,7 +531,7 @@
     <span class="host-badge-dot"></span>
     <span id="hostName">載入中...</span>
   </div>
-  <!-- 📅 動態活動日期顯示區塊 -->
+  <!-- 動態活動日期顯示區塊 -->
   <div id="eventPeriod" class="event-period-text" style="display: none;"></div>
 </div>
 
@@ -603,8 +595,10 @@
     <div class="footer-links">
       <a href="order-lookup.html" class="footer-link-item">🔍 查詢訂單進度</a>
       <span class="footer-divider">|</span>
+      <a href="tel:0800660677" class="footer-link-item">📞 0800-660-677</a>
+      <span class="footer-divider">|</span>
       <!-- ⚠️ 請將下方的 @your_line_id 替換為貴司實際的 LINE 官方帳號 ID -->
-      <a href="https://line.me/R/ti/p/@792mygta" target="_blank" rel="noopener noreferrer" class="footer-link-item" style="color: #06c755;">💬 聯絡線上客服</a>
+      <a href="https://line.me/R/ti/p/@792mygta" target="_blank" rel="noopener noreferrer" class="footer-link-item" style="color: #06c755;">💬 線上 LINE 客服</a>
     </div>
     <div style="font-size: 0.8rem; color: #94a3b8;">
       © H&H SELECT. All rights reserved.
@@ -621,7 +615,7 @@
   <button class="sticky-btn" onclick="scrollToCheckout()">前往結帳</button>
 </div>
 
-<!-- 右下角浮動 LINE 客服按鈕 -->
+<!-- 右下角單一浮動 LINE 客服按鈕 -->
 <!-- ⚠️ 請將下方的 @your_line_id 替換為貴司實際的 LINE 官方帳號 ID -->
 <a href="https://line.me/R/ti/p/@792mygta" target="_blank" rel="noopener noreferrer" class="floating-service-btn">
   💬 聯絡客服
@@ -679,10 +673,13 @@
           const hostName = data.host["團購主姓名"] || "官方總店";
           document.getElementById('hostName').innerText = hostName;
           
-          // 📅 自動渲染活動日期
+          // 活動日期處理（無圖示）
           const periodEl = document.getElementById('eventPeriod');
-          if (data.host["活動日期"]) {
-            periodEl.innerText = `活動期間：${data.host["活動日期"]}`;
+          const rawDate = data.host["活動日期"] || data.host["活動時間"] || "";
+          const eventDateStr = String(rawDate).trim();
+
+          if (eventDateStr && eventDateStr !== "undefined") {
+            periodEl.innerText = `活動期間：${eventDateStr}`;
             periodEl.style.display = 'block';
           } else {
             periodEl.style.display = 'none';
@@ -715,7 +712,6 @@
         featuresHtml = tags.map(t => `<span class="tag">${t.trim()}</span>`).join("");
       }
 
-      // 計算省下金額標籤
       let saveBadgeHtml = "";
       const groupPrice = Number(p["團購價格"]) || 0;
       const origPrice = Number(p["原價"]) || 0;
@@ -724,7 +720,6 @@
         saveBadgeHtml = `<div class="save-badge">省 $${diff}</div>`;
       }
 
-      // 自動解析 Drive 圖片
       let imgUrl = p["商品圖片"] || "";
       if (imgUrl.includes("drive.google.com")) {
         let match = imgUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || imgUrl.match(/id=([a-zA-Z0-9_-]+)/);
@@ -733,7 +728,6 @@
         }
       }
 
-      // 支援點擊圖片跳轉至指定的「商品網址」（用新分頁開啟）
       let productUrl = p["商品網址"] || p["產品連結"] || "";
       let imgHtml = "";
       if (imgUrl) {
@@ -858,7 +852,7 @@
             form.submit();
           });
         } else {
-          showAlert(`訂單已成功送出！\n單號：${data.orderId}\n如需修改或取消訂單，請憑單號聯繫客服。`, "訂單成立", function() {
+          showAlert(`訂單已成功送出！\n單號：${data.orderId}\n如需修改或查詢訂單，請憑單號聯繫客服。`, "訂單成立", function() {
             location.reload();
           });
         }
